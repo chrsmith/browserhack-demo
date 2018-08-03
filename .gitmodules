@@ -1,0 +1,3 @@
+[submodule "browserhack"]
+	path = browserhack
+	url = https://github.com/coolwanglu/browserhack
