@@ -1,0 +1,17 @@
+{
+    "name": "browserhack-demo",
+    "main": "bin/index.js",
+    "typings": "bin/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "lint": "tslint --project ."
+    },
+    "devDependencies": {
+        "tslint": "^5.10.0",
+        "typescript": "^2.7.2"
+    },
+    "dependencies": {
+        "static-website-aws": "latest",
+        "@pulumi/pulumi": "^0.14.3"
+    }
+}

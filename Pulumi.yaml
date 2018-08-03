@@ -1,0 +1,3 @@
+name: browserhack-demo
+description: Website for hosting BrowserHack, NetHack in your browser!
+runtime: nodejs
