@@ -1,0 +1,8 @@
+language: generic
+before_install:
+  # Install Pulumi
+  - curl -L https://get.pulumi.com/ | bash -s -- --version 0.14.4-dev-1533330360-g48aa5e73
+  - export PATH=$PATH:$HOME/.pulumi/bin
+  - pulumi login
+script:
+  - ./scripts/travis_${TRAVIS_EVENT_TYPE}.sh
