@@ -2,7 +2,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as staticWebsite from "static-website-aws";
 
 const contentArgs: staticWebsite.ContentArgs = {
-    pathToContent: "./browserhack",
+    pathToContent: "./browserhack-static",
     custom404Path: "/404.html",
 };
 
