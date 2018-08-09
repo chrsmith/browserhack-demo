@@ -6,5 +6,5 @@ npm install
 npm run build
 npm run lint
 
-pulumi stack select browserhack-demo
+pulumi stack select chrsmith/browserhack-demo
 PULUMI_PERSIST_PREVIEWS="1" pulumi preview

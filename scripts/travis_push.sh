@@ -8,10 +8,10 @@ npm run lint
 
 case ${TRAVIS_BRANCH} in
     master)
-        pulumi stack select browserhack-demo
+        pulumi stack select chrsmith/browserhack-demo
         pulumi update --yes
         ;;
     *)
-        echo "Push to non-master branch. Not updating Stack."
+        echo "Push to non-master branch. No stacks to update."
         ;;
 esac

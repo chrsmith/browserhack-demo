@@ -14,4 +14,4 @@ const domainArgs: staticWebsite.DomainArgs = {
 const website = new staticWebsite.StaticWebsite("browserhack", contentArgs, domainArgs);
 
 export let targetDomain = domainArgs.targetDomain;
-
+export let cloudfrontDomain = website.cdn.domainName;
