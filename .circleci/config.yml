@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:7.10
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - run: curl -L https://get.pulumi.com/ | bash -s -- --version 0.14.3
+      - run: pulumi login
+      - run: export PATH=$HOME/.pulumi/bin:$PATH
+      - run: yarn test
+      - run: echo "Circle CI Hello, World"
