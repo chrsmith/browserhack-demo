@@ -1,4 +1,71 @@
-version: 2
+# v2.1 is required to use Orbs.
+# https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/getting-started.md
+version: 2.1
+
+# Define the Pulumi orbs inline. These should later be published to circleci.com once stable.
+# https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/inline-orbs.md
+#
+# TODO: Provide examples of using every command, and under what circumstances it is needed.
+# TODO: Provide for a filter to only perform the update on certain branch x stack combos.
+orbs:
+  # Example of referencing a published pulumi orb.
+  # pulumi: circleci/pulumi@0.16.1
+  pulumi:
+    # TODO: Publish a standard Pulumi for CI/CD container, such as a base image
+    # we can reuse for GitHub Actions.
+    # https://github.com/pulumi/actions/blob/master/Dockerfile
+    #
+    # Once done, we can forego the "install" command, and just set the
+    # executor to be the Docker container.
+    commands:
+      # For details on parameterization, see:
+      # https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/parameters.md
+
+      # Installs the Pulumi command-line tool, and logs in using the PULUMI_ACCESS_TOKEN env var.
+      install:
+        parameters:
+          version:
+            description: "Version of the Pulumi CLI to install."
+            default: 0.16.0
+            type: string
+          cloud_url:
+            description: Name of the Pulumi API service to log into.
+            default: https://api.pulumi.com
+            type: string
+        steps:
+          - run: 
+              name: "Downloading and Installing CLI"
+              command: |
+                curl -L https://get.pulumi.com/ | bash -s -- --version << parameters.version >>
+                echo 'export PATH=/home/circleci/.pulumi/bin:$PATH' >> $BASH_ENV
+                source $BASH_ENV
+          - run:
+              name: "Logging into Pulumi"
+              command: pulumi login --cloud-url << parameters.cloud_url >>
+      # pulumi preview [--stack]
+      preview:
+        parameters:
+          stack:
+            description: Name of the Pulumi stack to preview.
+            type: string
+        steps:
+          - run: pulumi preview --stack << parameters.stack >>
+      # pulumi update [--stack]
+      update:
+        parameters:
+          stack:
+            description: Name of the Pulumi stack to update.
+            type: string
+        steps:
+          - run: pulumi update --stack << parameters.stack >>
+    jobs:
+      myjob:
+        executor: default
+        steps:
+          - dospecialthings
+          - codecov/upload:
+              path: ~/tmp/results.xml
+
 jobs:
   build:
     docker:
@@ -8,20 +75,18 @@ jobs:
 
     steps:
       - checkout
-      # Install Pulumi and add to PATH.
-      # https://circleci.com/docs/2.0/env-vars/
-      - run: curl -L https://get.pulumi.com/ | bash -s -- --version 0.16.1
+
+      # Install before Build to ensure required Node plugins are available.
+      - pulumi/install:
+          version: "0.16.1"
+
+      # Build
       - run:
-          name: Add Pulumi to $PATH
+          name: Build and Test
           command: |
-            echo 'export PATH=/home/circleci/.pulumi/bin:$PATH' >> $BASH_ENV
-            source $BASH_ENV
-
-      # Build, Lint, Test
-      - run: npm install
-      - run: npm run build
-      - run: npm run lint
-
-      # Update the stack
-      - run: pulumi login
-      - run: pulumi update -s browserhack-demo
+            npm install
+            npm run build
+            npm run test
+      # Deploy using Pulumi
+      - pulumi/update:
+          stack: browserhack-demo
