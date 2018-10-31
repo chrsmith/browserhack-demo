@@ -15,6 +15,7 @@ jobs:
 
       # Install before Build to ensure required Node plugins are available.
       - pulumi/login:
+          access-token: "sensitive do not leak!"
           version: "0.16.2"
 
       # Build
