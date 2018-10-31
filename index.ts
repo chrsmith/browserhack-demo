@@ -1,4 +1,3 @@
-import * as pulumi from "@pulumi/pulumi";
 import * as staticWebsite from "static-website-aws";
 
 const contentArgs: staticWebsite.ContentArgs = {
