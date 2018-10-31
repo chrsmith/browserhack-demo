@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  pulumi: pulumi/pulumi@dev:0.0.6
+  pulumi: pulumi/pulumi@dev:0.0.7
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
 
       # Install before Build to ensure required Node plugins are available.
       - pulumi/login:
-          access-token: "sensitive do not leak!"
+          access-token: "sensitive do not leak!... now with escaping"
           version: "0.16.2"
 
       # Build
