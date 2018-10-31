@@ -13,9 +13,6 @@ jobs:
     steps:
       - checkout
 
-      - run:
-        command: echo "Running pulumi login"
-
       # Install before Build to ensure required Node plugins are available.
       - pulumi/login:
           version: "0.16.2"
