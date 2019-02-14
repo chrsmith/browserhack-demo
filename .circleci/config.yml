@@ -4,7 +4,7 @@ orbs:
   pulumi: pulumi/pulumi@1.0.0
 
 jobs:
-  build:
+  build_and_test:
     docker:
       - image: circleci/node:7.10
 
@@ -21,5 +21,39 @@ jobs:
             npm run build
             npm run test
 
+  preview:
+    docker:
+      - image: circleci/node:7.10
+    steps:
+      - pulumi/preview:
+          stack: browserhack-demo
+
+  update:
+    docker:
+      - image: circleci/node:7.10
+    steps:
       - pulumi/update:
           stack: browserhack-demo
+          skip-preview: true
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build_and_test
+
+      # Preview changes for branches other than 'master', e.g. pull requests.
+      - preview:
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              ignore: master
+
+      # Update the stack for pushes to the 'master' branch.
+      - update:
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              only: master
