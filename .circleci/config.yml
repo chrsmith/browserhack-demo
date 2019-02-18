@@ -3,23 +3,74 @@ version: 2.1
 orbs:
   pulumi: pulumi/pulumi@1.0.0
 
+workflows:
+  version: 2
+  build_test_and_deploy:
+    jobs:
+      - update_staging:
+          filters:
+            branches:
+              only: master
+      - update_production:
+          filters:
+            branches:
+              only: production
+      # For any other branch (e.g. feature branches), preview the changes to
+      # be made into the staging environment to validate before merging.
+      - preview_changes:
+          filters:
+            branches:
+              ignore:
+                - master
+                - production
+
 jobs:
-  build:
+  update_staging:
     docker:
       - image: circleci/node:7.10
-
     working_directory: ~/repo
-
     steps:
       - checkout
       - pulumi/login
-
       - run:
           name: Build and Test
           command: |
             npm install
             npm run build
             npm run test
-
       - pulumi/update:
-          stack: browserhack-demo
+          stack: browserhack-staging
+          skip-preview: true
+
+  update_production:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - pulumi/login
+      - run:
+          name: Build and Test
+          command: |
+            npm install
+            npm run build
+            npm run test
+      - pulumi/update:
+          stack: browserhack-prod
+          skip-preview: true
+
+  preview_changes:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - pulumi/login
+      - run:
+          name: Build and Test
+          command: |
+            npm install
+            npm run build
+            npm run test
+      - pulumi/preview:
+          stack: browserhack-staging
