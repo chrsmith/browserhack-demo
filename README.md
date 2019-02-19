@@ -1,6 +1,6 @@
 # browserhack-demo
 
-Demo of using Pulumi to deploy BrowserHack, play NetHack in your browser!
+Play NetHack in your Browser!
 
 [BrowserHack](https://github.com/coolwanglu/BrowserHack) is the port of NetHack to JavaScript by @coolwanglu.
 
