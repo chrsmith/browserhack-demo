@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   pulumi: pulumi/pulumi@1.0.0
+  queue: eddiewebb/queue@1.1.2
 
 workflows:
   version: 2
@@ -38,6 +39,8 @@ jobs:
             npm install
             npm run build
             npm run test
+      - queue/until_front_of_line:
+          time: "10"
       - pulumi/update:
           stack: browserhack-staging
           skip-preview: true
@@ -55,6 +58,8 @@ jobs:
             npm install
             npm run build
             npm run test
+      - queue/until_front_of_line:
+          time: "10"
       - pulumi/update:
           stack: browserhack-prod
           skip-preview: true
