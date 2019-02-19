@@ -1,4 +1,4 @@
 config:
   aws:region: us-east-1
   browserhack-demo:acmCertificate: arn:aws:acm:us-east-1:153052954103:certificate/8d62a568-cc86-4e26-8f6e-08981e1bb7ca
-  browserhack-demo:targetDomain: browserhack-staging.lawn-gnomes.net
+  browserhack-demo:targetDomain: bhack-staging.lawn-gnomes.net
